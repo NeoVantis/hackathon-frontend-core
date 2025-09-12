@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent, FormEvent } from "react";
 
 interface FormData {
@@ -15,6 +16,7 @@ const Signup: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+  const navigate = useNavigate()
 
   const [error, setError] = useState<string>("");
 
@@ -41,6 +43,7 @@ const Signup: React.FC = () => {
 
     // ✅ Proceed with signup logic here
     console.log("Signup successful", formData);
+    navigate('/verify-email')
   };
 
   return (
@@ -133,7 +136,7 @@ const Signup: React.FC = () => {
           <div className="flex justify-center">
             <p className="text-[#475467]">
               Already have an account?{" "}
-              <span className="text-[#2970FF] cursor-pointer">Sign in</span>
+              <button type="button" onClick={() => navigate('/login')} className="text-[#2970FF] cursor-pointer hover:underline">Sign in</button>
             </p>
           </div>
         </form>

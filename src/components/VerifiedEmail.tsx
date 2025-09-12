@@ -1,15 +1,17 @@
-import React from "react";
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 
 const VerifiedEmail: React.FC = () => {
+  const navigate = useNavigate()
   const handleContinue = () => {
-    console.log("Continue to next step");
-    // ✅ Add navigation logic here
-  };
+    toast.success('Welcome!')
+    navigate('/home')
+  }
 
   const handleBackToLogin = () => {
-    console.log("Back to login");
-    // ✅ Add navigation logic here
-  };
+    navigate('/login')
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">

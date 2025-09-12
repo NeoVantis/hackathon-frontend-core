@@ -1,17 +1,5 @@
-// import { Button} from '@neovantis/mantisui'
-// import { useState } from 'react'
-// import Login from './components/Login'
-// import Signup from './components/Signup'
-// import VerifyEmail from './components/VerifyEmail'
-import VerifiedEmail from './components/VerifiedEmail'
+import { AppRoutes } from './router'
 
-function App() {
-
-  return (
-    <>
-      <VerifiedEmail/>
-    </>
-  )
+export default function App() {
+  return <AppRoutes />
 }
-
-export default App
