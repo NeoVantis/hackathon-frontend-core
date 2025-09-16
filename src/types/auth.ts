@@ -2,10 +2,19 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  stepOneComplete?: boolean;
   fullName?: string;
   phoneNumber?: string;
   college?: string;
   address?: string;
+  stepTwoComplete?: boolean;
+  isVerified?: boolean;
+  emailVerifiedAt?: string;
+  isActive?: boolean;
+  passwordResetCount?: number;
+  lastPasswordReset?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface LoginResponse {

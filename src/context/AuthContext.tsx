@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const loadProfile = useCallback(async () => {
-    if (token) {
+    if (token && !user) {
       try {
         const profile = await getProfile();
         setUser(profile);
@@ -72,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logout();
       }
     }
-  }, [token]);
+  }, [token, user]);
 
   useEffect(() => {
     loadProfile();
