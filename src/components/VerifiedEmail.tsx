@@ -1,11 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-hot-toast'
 
 const VerifiedEmail: React.FC = () => {
   const navigate = useNavigate()
   const handleContinue = () => {
-    toast.success('Welcome!')
+    console.log('Welcome!')
     navigate('/home')
   }
 

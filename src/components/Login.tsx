@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import type { FormEvent, ChangeEvent } from "react";
+import { useAuth } from '../context/AuthContext';
 
 interface LoginData {
-  email: string;
+  identifier: string;
   password: string;
   remember: boolean;
 }
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginData>({
-    email: "",
+    identifier: "",
     password: "",
     remember: false,
   });
   const navigate = useNavigate()
+  const { login } = useAuth();
 
-  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -24,22 +26,22 @@ const Login: React.FC = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setError("");
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { email, password } = formData;
+    const { identifier, password } = formData;
 
-    if (!email || !password) {
-      setError("Email and Password are required.");
-      return;
+    setLoading(true);
+    try {
+      await login(identifier, password);
+      navigate('/home');
+    } catch (err) {
+      console.error('Login failed:', (err as Error).message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
-
-    // ✅ Proceed with login
-    console.log("Login successful", formData);
-    navigate('/home')
   };
 
   return (
@@ -53,30 +55,25 @@ const Login: React.FC = () => {
           </h2>
         </div>
 
-        {/* Error message */}
-        {error && (
-          <div className="mb-4 text-red-500 text-sm text-center">{error}</div>
-        )}
-
         {/* Form */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Email */}
-          <div>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* Identifier */}
+          <div className="space-y-1">
             <label className="block text-sm font-medium text-[#D9D9D9]">
-              Email
+              Username or Email
             </label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
+              type="text"
+              name="identifier"
+              value={formData.identifier}
               onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-[99px] focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your email"
+              className="w-full px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+              placeholder="Enter your username or email"
             />
           </div>
 
           {/* Password */}
-          <div>
+          <div className="space-y-1">
             <label className="block text-sm font-medium text-[#D9D9D9]">
               Password
             </label>
@@ -85,7 +82,7 @@ const Login: React.FC = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-[99px] focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
               placeholder="Enter your password"
             />
           </div>
@@ -104,6 +101,7 @@ const Login: React.FC = () => {
             </label>
             <button
               type="button"
+              onClick={() => navigate('/forgot-password')}
               className="text-sm text-[#2970FF] hover:underline"
             >
               Forgot password?
@@ -113,9 +111,10 @@ const Login: React.FC = () => {
           {/* Sign In Button */}
           <button
             type="submit"
-            className="w-full py-3 px-4 mt-2 bg-[#1D3EE7] text-white rounded-[99px] hover:bg-blue-700"
+            disabled={loading}
+            className="w-full py-3 px-4 mt-2 bg-[#1D3EE7] text-white rounded-[99px] hover:bg-blue-700 disabled:opacity-50"
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
 
           {/* Sign Up Button */}
