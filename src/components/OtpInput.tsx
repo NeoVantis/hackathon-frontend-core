@@ -106,7 +106,7 @@ export default function OtpInput({
           inputMode="numeric"
           autoComplete="one-time-code"
           pattern="[0-9]*"
-          maxLength={length}
+          maxLength={1}
           value={vals[i] ?? ''}
           placeholder="0"
           aria-label={`Digit ${i + 1} of ${length}`}
