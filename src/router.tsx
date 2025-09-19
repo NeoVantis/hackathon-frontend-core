@@ -1,4 +1,4 @@
-import { useRoutes, Navigate } from 'react-router-dom'
+import { useRoutes } from 'react-router-dom'
 import type { RouteObject } from 'react-router-dom'
 import VerifyEmail from './components/VerifyEmail'
 import VerifiedEmail from './components/VerifiedEmail'
@@ -9,9 +9,15 @@ import ForgotPassword from './components/ForgotPassword'
 import StepOne from './signUp/StepOne'
 import StepTwo from './signUp/StepTwo'
 import WithAuth from './utils/withAuth'
+import Index from './pages/Index'
+import Hackathons from './pages/Hackathons'
+import About from './pages/About'
 
 const routes: RouteObject[] = [
-  { path: '/', element: <Navigate to="/login" replace /> },
+  { path: '/', element: <Index /> },
+  { path: '/hackathons', element: <Hackathons /> },
+  { path: '/about', element: <About /> },
+  { path: '/signin', element: <Login /> },
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <Signup /> },
   { path: '/forgot-password', element: <ForgotPassword /> },
