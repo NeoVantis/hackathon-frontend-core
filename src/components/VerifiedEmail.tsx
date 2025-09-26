@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 const VerifiedEmail: React.FC = () => {
   const navigate = useNavigate()
   const handleContinue = () => {
-    console.log('Welcome!')
     navigate('/home')
   }
 

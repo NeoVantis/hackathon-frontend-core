@@ -4,6 +4,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { signupStep1 } from '../api/auth';
 import type { SignupStep1Data, SignupStep1Response } from '../types/auth';
 import axios from 'axios';
+import { storage } from '../utils/storage';
 
 interface FormData extends SignupStep1Data {
   confirmPassword: string;
@@ -40,6 +41,9 @@ const StepOne: React.FC = () => {
       if (!userId) {
         throw new Error('Invalid response: userId not found in response');
       }
+      
+      // Store pending user ID for resumption
+      storage.setPendingUserId(userId);
       
       navigate(`/step-two/${userId}`);
     } catch (err) {

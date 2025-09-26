@@ -14,6 +14,22 @@ import type {
   User
 } from '../types/auth';
 
+// Create separate API instance for user status endpoint
+const userApi = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL.replace('/auth', ''),
+});
+
+userApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const signupStep1 = async (data: SignupStep1Data): Promise<SignupStep1Response> => {
   try {
     const response = await api.post('/signup/step1', data);
@@ -101,6 +117,18 @@ export const resetPassword = async (data: ResetPasswordData): Promise<{ message:
 export const getProfile = async (): Promise<User> => {
   try {
     const response = await api.get('/me');
+    return response.data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.data?.message) {
+      throw new Error(err.response.data.message);
+    }
+    throw err;
+  }
+};
+
+export const getUserStatus = async (userId: string): Promise<User | { user: User }> => {
+  try {
+    const response = await userApi.get(`/users/${userId}`);
     return response.data;
   } catch (err) {
     if (axios.isAxiosError(err) && err.response?.data?.message) {
