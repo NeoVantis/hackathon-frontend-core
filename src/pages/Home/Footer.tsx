@@ -5,7 +5,7 @@ interface FooterProps {
 export default function Footer({ className = "" }: FooterProps) {
 
   return (
-    <footer className="bg-black flex justify-center items-center">
+    <footer className={`bg-black flex justify-center items-center ${className}`}>
       <div className="w-full max-w-7xl">
         <div className="px-4 sm:px-8 md:px-14 pt-12 sm:pt-16 md:pt-20 pb-4 mx-2 sm:mx-4 md:m-5">
           <div className="text-[#EEE] font-orbitron sm:text-5xl md:text-7xl lg:text-[90px] text-center md:text-left">The Hackathon Project</div>
