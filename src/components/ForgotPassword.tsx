@@ -15,7 +15,6 @@ const ForgotPassword: React.FC = () => {
   const handleRequestReset = async (e: FormEvent) => {
     e.preventDefault()
     if (!email) {
-      console.error('Please enter your email')
       return
     }
     setLoading(true)
@@ -23,7 +22,6 @@ const ForgotPassword: React.FC = () => {
       const response = await forgotPassword({ email })
       setOtpId(response.otpId)
       setStep('reset')
-      console.log('Reset code sent to your email!')
     } catch (err) {
       console.error((err as Error).message || 'Failed to send reset code')
     } finally {
@@ -34,13 +32,11 @@ const ForgotPassword: React.FC = () => {
   const handleResetPassword = async (e: FormEvent) => {
     e.preventDefault()
     if (!code || !newPassword) {
-      console.error('Please fill all fields')
       return
     }
     setLoading(true)
     try {
       await resetPassword({ otpId, code, newPassword })
-      console.log('Password reset successfully!')
       navigate('/login')
     } catch (err) {
       console.error((err as Error).message || 'Failed to reset password')

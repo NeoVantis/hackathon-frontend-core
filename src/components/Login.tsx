@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import type { FormEvent, ChangeEvent } from "react";
 import { useAuth } from '../context/AuthContext';
+import { storage } from '../utils/storage';
 
 interface LoginData {
   identifier: string;
@@ -38,7 +39,27 @@ const Login: React.FC = () => {
       await login(identifier, password);
       navigate('/home');
     } catch (err) {
-      console.error('Login failed:', (err as Error).message || 'Login failed');
+      // Try to extract error code and message from error object
+      const errorObj = err as { code?: string; message?: string };
+      const errorMessage = errorObj.message || (err as Error).message || 'Login failed';
+      const errorCode = errorObj.code;
+      console.error('Login failed:', errorMessage);
+      
+      // Check if user needs to complete registration using error code if available
+      if (
+        errorCode === 'REGISTRATION_INCOMPLETE' ||
+        errorMessage.includes('Please complete your registration') ||
+        errorMessage.includes('registration incomplete')
+      ) {
+        // Try to get user ID from error or assume it's stored
+        const pendingUserId = storage.getPendingUserId();
+        if (pendingUserId) {
+          navigate(`/step-two/${pendingUserId}`);
+        } else {
+          // Redirect to signup if no pending user
+          navigate('/signup');
+        }
+      }
     } finally {
       setLoading(false);
     }

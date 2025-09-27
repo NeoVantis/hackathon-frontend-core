@@ -5,9 +5,11 @@ import { signupStep2 } from '../api/auth';
 import type { SignupStep2Data } from '../types/auth';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { storage } from '../utils/storage';
 
 const StepTwo: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId: paramUserId } = useParams<{ userId: string }>();
+  const userId = paramUserId || storage.getPendingUserId();
   const [formData, setFormData] = useState<SignupStep2Data>({
     fullName: "",
     phoneNumber: "",

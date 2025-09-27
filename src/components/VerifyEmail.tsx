@@ -1,9 +1,10 @@
 import OtpInput from './OtpInput'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { requestEmailVerification, verifyEmail } from '../api/auth'
 import type { ChangeEvent, FormEvent } from 'react'
+import { storage } from '../utils/storage'
 
 const OTP_LENGTH = 6
 
@@ -17,21 +18,9 @@ const VerifyEmail: React.FC = () => {
   const location = useLocation()
   const { setAuthData } = useAuth()
 
-  useEffect(() => {
-    const state = location.state as { email?: string; otpId?: string } | null
-    if (state?.email) {
-      setEmail(state.email)
-      if (state.otpId) {
-        setOtpId(state.otpId)
-      }
-      // Note: Backend automatically sends OTP email after Step 2, so no need to request here
-    }
-  }, [location.state])
-
-  const handleRequestVerification = async (e?: FormEvent) => {
+  const handleRequestVerification = useCallback(async (e?: FormEvent) => {
     if (e) e.preventDefault()
     if (!email) {
-      console.error('Please enter your email')
       return
     }
     setRequesting(true)
@@ -39,28 +28,40 @@ const VerifyEmail: React.FC = () => {
       const response = await requestEmailVerification({ email })
       setOtpId(response.otpId)
       setOtp('')
-      console.log('Verification code sent!')
     } catch (err) {
       console.error((err as Error).message || 'Failed to send verification code')
     } finally {
       setRequesting(false)
     }
-  }
+  }, [email])
+
+  useEffect(() => {
+    const state = location.state as { email?: string; otpId?: string } | null
+    if (state?.email) {
+      setEmail(state.email)
+      if (state.otpId) {
+        setOtpId(state.otpId)
+      } else {
+        // If resuming from previous session, request new OTP
+        handleRequestVerification()
+      }
+      // Note: Backend automatically sends OTP email after Step 2, so no need to request here
+    }
+  }, [location.state, handleRequestVerification])
 
   const handleComplete = async () => {
     if (!otpId) {
-      console.error('Please request verification code first')
       return
     }
     // Auto submit when complete
     setSubmitting(true)
-    console.log('Verifying code...')
     try {
       const response = await verifyEmail({ otpId, code: otp })
       if (response.access_token && response.user) {
         setAuthData(response.access_token, response.user)
       }
-      console.log('Email verified!')
+      // Clear pending registration data on successful verification
+      storage.clearRegistrationData();
       navigate('/home')
     } catch (err) {
       console.error((err as Error).message || 'Verification failed')
