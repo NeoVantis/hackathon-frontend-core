@@ -88,7 +88,7 @@ const Login: React.FC = () => {
               name="identifier"
               value={formData.identifier}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+              className="w-full text-black px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
               placeholder="Enter your username or email"
             />
           </div>
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
+              className="w-full text-black px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
               placeholder="Enter your password"
             />
           </div>
