@@ -1,5 +1,6 @@
 /**
- * Utility functions for safe localStorage operations
+ * Utility functions for safe localStorage operations.
+ * All functions in this module interact with browser localStorage.
  */
 
 const PENDING_USER_ID_KEY = 'pendingUserId';
