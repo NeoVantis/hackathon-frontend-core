@@ -39,12 +39,18 @@ const Login: React.FC = () => {
       await login(identifier, password);
       navigate('/home');
     } catch (err) {
-      const errorMessage = (err as Error).message || 'Login failed';
+      // Try to extract error code and message from error object
+      const errorObj = err as { code?: string; message?: string };
+      const errorMessage = errorObj.message || (err as Error).message || 'Login failed';
+      const errorCode = errorObj.code;
       console.error('Login failed:', errorMessage);
       
-      // Check if user needs to complete registration
-      if (errorMessage.includes('Please complete your registration') || 
-          errorMessage.includes('registration incomplete')) {
+      // Check if user needs to complete registration using error code if available
+      if (
+        errorCode === 'REGISTRATION_INCOMPLETE' ||
+        errorMessage.includes('Please complete your registration') ||
+        errorMessage.includes('registration incomplete')
+      ) {
         // Try to get user ID from error or assume it's stored
         const pendingUserId = storage.getPendingUserId();
         if (pendingUserId) {
