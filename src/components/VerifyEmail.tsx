@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState, useEffect, useCallback } from 'react'
 import { requestEmailVerification, verifyEmail } from '../api/auth'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { FormEvent } from 'react'
 import { storage } from '../utils/storage'
 
 const OTP_LENGTH = 6
@@ -75,7 +75,11 @@ const VerifyEmail: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen bg-black">
       <div className="w-full max-w-md bg-black shadow-lg rounded-2xl p-8 text-center">
         <div className="flex justify-center mb-4">
-          <img src="EmailIcon.png" alt="emailIcon" />
+          <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
         </div>
         <h2 className="text-xl font-semibold text-[#D9D9D9] mb-2">Verify your email</h2>
         <p className="text-sm text-[#C7C7CC] mb-6">
@@ -85,54 +89,29 @@ const VerifyEmail: React.FC = () => {
           }
         </p>
 
-        {!otpId && !location.state ? (
-          <form onSubmit={handleRequestVerification} className="space-y-5">
-            <div className="space-y-1">
-              <label className="block text-sm font-medium text-[#D9D9D9]">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-600 rounded-[99px] focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+        <>
+          <div className="mb-6 flex justify-center">
+            <OtpInput length={OTP_LENGTH} onChange={setOtp} onComplete={() => handleComplete()} size={72} />
+          </div>
+          <button
+            onClick={() => handleComplete()}
+            disabled={disabled}
+            className="w-full py-3 px-4 mb-4 bg-[#1D3EE7] text-white rounded-[99px] hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {submitting ? 'Verifying...' : 'Verify Email'}
+          </button>
+          <div className="mb-4">
+            <span className="text-sm text-[#C7C7CC]">Didn't receive OTP? </span>
             <button
-              type="submit"
+              className="text-sm text-[#2970FF] hover:underline"
+              onClick={handleRequestVerification}
               disabled={requesting}
-              className="w-full py-3 px-4 bg-[#1D3EE7] text-white rounded-[99px] hover:bg-blue-700 disabled:opacity-50"
             >
-              {requesting ? 'Sending...' : 'Send Verification Code'}
+              {requesting ? 'Sending...' : 'Resend'}
             </button>
-          </form>
-        ) : (
-          <>
-            <div className="mb-6 flex justify-center">
-              <OtpInput length={OTP_LENGTH} onChange={setOtp} onComplete={() => handleComplete()} />
-            </div>
-            <button
-              onClick={() => handleComplete()}
-              disabled={disabled}
-              className="w-full py-3 px-4 mb-4 bg-[#1D3EE7] text-white rounded-[99px] hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {submitting ? 'Verifying...' : 'Verify Email'}
-            </button>
-            <div className="mb-4">
-              <span className="text-sm text-[#C7C7CC]">Didn't receive OTP? </span>
-              <button
-                className="text-sm text-[#2970FF] hover:underline"
-                onClick={handleRequestVerification}
-                disabled={requesting}
-              >
-                {requesting ? 'Sending...' : 'Resend'}
-              </button>
-            </div>
-          </>
-        )}
-        <button className="w-full py-3 px-4 border border-[#475467] text-[#D9D9D9] rounded-[99px] hover:bg-[#1a1a1a]" onClick={() => navigate('/signup')}>Back</button>
+          </div>
+        </>
+        <button className="text-xs text-gray-400 hover:text-gray-300" onClick={() => navigate('/signup')}>← Back to signup</button>
       </div>
     </div>
   )
