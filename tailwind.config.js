@@ -5,7 +5,9 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',  // adjust extensions based on your project
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+        orbitron: ['Orbitron', 'sans-serif'],
+    },
   },
   plugins: [],
 }
